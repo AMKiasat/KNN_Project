@@ -1,4 +1,6 @@
+from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
+from sklearn import datasets
 import numpy as np
 import math
 
@@ -7,6 +9,12 @@ def calculate_distance(point1, point2):
     x1, y1 = point1
     x2, y2 = point2
     distance = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    return distance
+
+
+def calculate_distance_iris(point1, point2):
+    distance = math.sqrt((point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2 + (point1[2] - point2[2]) ** 2 + (
+                point1[3] - point2[3]) ** 2)
     return distance
 
 
@@ -36,8 +44,8 @@ def calculate_best_k(x, y):
 
 
 def plot_data(x, y):
-    blue = data[label == 1]
-    red = data[label == -1]
+    blue = x[y == 1]
+    red = x[y == -1]
     plt.scatter(blue[:, 0], blue[:, 1], c='blue', label='Label 1')
     plt.scatter(red[:, 0], red[:, 1], c='red', label='Label -1')
     plt.xlabel('X-axis')
@@ -57,10 +65,43 @@ def plot_for_k(error_a):
     plt.show()
 
 
-if __name__ == '__main__':
+def q8():
     data = np.array([[1, 6], [2, 6], [2, 7], [3, 7], [3, 8], [4, 9], [6, 1], [7, 2], [7, 3], [8, 3], [8, 4], [9, 4]])
     label = np.array([-1, 1, -1, 1, -1, -1, 1, 1, -1, 1, -1, 1])
 
     plot_data(data, label)
     error_acc = calculate_best_k(data, label)
     plot_for_k(error_acc)
+
+
+
+def iris_db():
+    iris = datasets.load_iris()
+    data = iris.data
+    label = iris.target
+    k = int(input("Please insert an odd number for k in knn algorithm: "))
+    predicts = []
+    for i in range(len(data)):
+        new_data = np.delete(data, i, axis=0)
+        new_label = np.delete(label, i, axis=0)
+        distances = []
+        for j in range(len(new_data)):
+            distances.append(calculate_distance_iris(data[i], new_data[j]))
+        sorted_indices = np.argsort(distances)
+        sorted_labels = new_label[sorted_indices]
+        count = [sum(1 for element in sorted_labels[:k] if element == 0),
+                 sum(1 for element in sorted_labels[:k] if element == 1),
+                 sum(1 for element in sorted_labels[:k] if element == 2)]
+        print(count)
+        predicts.append(np.argmax(np.array(count)))
+    correct = 0
+    for i in range(len(label)):
+        if predicts[i] == label[i]:
+            correct += 1
+    error_accuracy = [(len(label) - correct) / len(label), k]
+    print("for k =", k, "\terror=", len(label) - correct, "\t/", len(label), "\t= ", error_accuracy[0])
+
+
+if __name__ == '__main__':
+    # q8()
+    iris_db()

@@ -99,9 +99,12 @@ def iris_db():
         if predicts[i] == label[i]:
             correct += 1
     error_accuracy = [(len(label) - correct) / len(label), k]
-    print("for k =", k, "\terror=", len(label) - correct, "\t/", len(label), "\t= ", error_accuracy[0])
+    print("for k =", k, "error=", len(label) - correct, "/", len(label), "=", error_accuracy[0])
 
 
 if __name__ == '__main__':
-    # q8()
-    iris_db()
+    which_one = input("which question? ")
+    if which_one == '1':
+        q8()
+    if which_one == '2':
+        iris_db()

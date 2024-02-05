@@ -18,7 +18,7 @@ def calculate_distance_iris(point1, point2):
     return distance
 
 
-def calculate_best_k(x, y):
+def calculate_error(x, y):
     error_accuracy = []
     for k in range(1, len(x), 2):
         predicts = []
@@ -61,7 +61,7 @@ def plot_for_k(error_a):
     plt.ylabel('Error Accuracy')
 
     # Adding a title to the chart
-    plt.title('Bar Chart')
+    plt.title('Error Chart')
     plt.show()
 
 
@@ -70,7 +70,7 @@ def q8():
     label = np.array([-1, 1, -1, 1, -1, -1, 1, 1, -1, 1, -1, 1])
 
     plot_data(data, label)
-    error_acc = calculate_best_k(data, label)
+    error_acc = calculate_error(data, label)
     plot_for_k(error_acc)
 
 
@@ -92,7 +92,7 @@ def iris_db():
         count = [sum(1 for element in sorted_labels[:k] if element == 0),
                  sum(1 for element in sorted_labels[:k] if element == 1),
                  sum(1 for element in sorted_labels[:k] if element == 2)]
-        print(count)
+        # print(count)
         predicts.append(np.argmax(np.array(count)))
     correct = 0
     for i in range(len(label)):
